@@ -1,3 +1,7 @@
+# Notice: Incomplete Code:
+
+Due to licencing reasons, some essential parts of the code could not be released. We are working towards fixing this issue. As of now, the code is not runnable, but one can browse through the structure and pick up hyper parameters. Thanks for understanding.
+
 # GIF: Generative Interpretable Faces
 This is the official inmplentation fo the paper GIF: Generative Interpretable Faces - https://arxiv.org/abs/2009.00149.
 GIF is a photorealistic generative face model with explicit 3D geometric and photometric control.

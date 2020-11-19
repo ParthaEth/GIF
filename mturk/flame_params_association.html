@@ -1,0 +1,61 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+
+  <!-- The crowd-image-classifier element will create a tool for the Worker to select the 
+         correct answer to your question.
+
+          Your image file URLs will be substituted for the "image_url" variable below 
+          when you publish a batch with a CSV input file containing multiple image file URLs.
+          To preview the element with an example image, try setting the src attribute to
+          "https://s3.amazonaws.com/cv-demo-images/two-birds.jpg" -->
+  <crowd-image-classifier
+    src="${image_url}"
+    name="category"
+    categories="['Not Similar at all', '1 aspect similar', '2 aspects similar', '3 aspects loosely similar', 'All aspects highly similar']"
+    header="Shape, Pose and Expression Similarity"
+  >
+
+
+       <!-- Use the short-instructions section for quick instructions that the Worker
+              will see while working on the task. Including some basic examples of 
+              good and bad answers here can help get good results. You can include 
+              any HTML here. -->
+        <short-instructions>
+      <li>Determine if the two images are similar in terms of 3 aspects - shape, pose and expression.</li>  
+      <li>Left image is called Real Image.</li>
+      <li>Right image, which looks like mannequin, is called Mesh Image.</li>
+      <li>You have to determine if shape, pose and expression of mesh/mannequin image matches real image.</li>
+        
+    </short-instructions>
+
+    <!-- Use the full-instructions section for more detailed instructions that the 
+          Worker can open while working on the task. Including more detailed 
+          instructions and additional examples of good and bad answers here can
+          help get good results. You can include any HTML here. -->
+    <full-instructions header="Image Scoring Instructions">
+      <h2>Detailed Instructions</h2>
+      <li>Determine if the two images are similar in terms of 3 aspects - shape, pose and expression.</li>
+      <li>Left image is called Real Image.</li>
+      <li>Right image, which looks like mannequin, is called Mesh Image.</li>
+      <li>You have to determine if shape, pose and expression of mesh/mannequin image matches real image.</li>
+      <ol>
+        <li>Begin by carefully examining the imagse</li>
+        <li>Next determine similarity between images in terms of shape, pose and expression.</li>
+        <li>Select appropriate score: <br>
+        (1) Not similar at all <br>
+        (2) 1 aspect similar <br>
+        (3) 2 aspects similar <br>
+        (4) 3 aspects loosely similar <br>
+        (5) All aspects are highly similar <br>
+        
+      </ol>
+    </full-instructions>
+
+  </crowd-image-classifier>
+</crowd-form>

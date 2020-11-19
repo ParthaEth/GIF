@@ -1,0 +1,23 @@
+Cuda, pytorch version of vertex visibility check based on rasterization
+
+Developed by Yao Feng yao.feng@tuebingen.mpg.de
+
+Input: 
+	1. mesh vertices in the shape of [batch_size, number_vertices, 3(u,v,z coordinates)], format of torch.tensor.float32
+	* Note, uv coordinates ranging within [-1, 1] means they are in the image, outside this range eaquals out side of image, regardless of the image pixel size. (0,0) is the image center.
+	2. mesh faces in the shape of [batch_size, number_faces, 3(3 vertex_index)], format of torch.tensor.long
+Output:
+	mesh vertices visibility in the shape of [batch_size, number_vertices, 1(visibility)], with torch.tensor.float32. Visibility=1.0 means visible, 0.0 means occluded or outside of the image.
+
+Usage:
+	Before you run the demo or use the code, make sure you compile the backend cuda code by doing $ python3(2) setup.py build_ext -i
+	Two visibility methods are implemented. They are get_visibility() and get_visibility_z()
+	An example of using these function can be found in demo_vert_visibility.
+
+Dependency:
+	Tested on CUDA10.0, pytorch 1.0/1.2/1.3, python2 and python3*
+	* For unknown reason, python2 may run slower than python3
+
+	
+
+

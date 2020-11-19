@@ -1,0 +1,168 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+
+<crowd-form answer-format="flatten-objects">
+
+    <!-- The crowd-classifier element will create a tool for the Worker to select the
+           correct answer to your question.
+
+          Your image file URLs will be substituted for the "image_url" variable below
+          when you publish a batch with a CSV input file containing multiple image file URLs.
+          To preview the element with an example image, try setting the src attribute to
+          "https://s3.amazonaws.com/cv-demo-images/two-birds.jpg" -->
+        ` <!-- <div class="row">
+             <form action="#" method="post">
+          </div> -->
+           <div style = "position: absolute">
+
+          <div class="column2">
+            <img src='https://gifeval.s3.eu-central-1.amazonaws.com/flame_param_association/images/${GT}' alt="Mesh" style="width:256px"  border="10">
+            <span class="caption">Mesh</span>
+          </div>
+          </form>
+
+
+          <div class="column">
+              <input type="radio" class="radio" name="example" id="ex1" value="label1" />
+            <label for="ex1" class="label1">Example 1</label>
+            <span class="caption">Option 1</span>
+
+          </div>
+
+          <div class="column">
+            <input type="radio" class="radio" name="example" id="ex2" value="label2" />
+            <label for="ex2" class="label2">Example 2</label>
+            <span class="caption">Option 2</span>
+
+        </div>
+          </div>
+
+             <!-- Use the short-instructions section for quick instructions that the Worker
+              will see while working on the task. Including some basic examples of
+              good and bad answers here can help get good results. You can include
+              any HTML here. -->
+            <short-instructions>
+                <ol>
+                    <li> Which <u><b>best matches</b></u> the Mesh?
+                    <li> <u><b> Option 1 </b></u> or <u><b>Option 2</b></u>?
+                    <li> Click on that
+                </ol>
+            </short-instructions>
+
+                  <!-- Use the full-instructions section for more detailed instructions that the
+                  Worker can open while working on the task. Including more detailed
+                  instructions and additional examples of good and bad answers here can
+                  help get good results. You can include any HTML here. -->
+            <full-instructions header="Which image matches the Mesh the best?">
+                    <h2>Detailed instructions</h2>
+                    <p>Please choose the one between the two available options that conforms to the given mesh object</p>
+                    <ol>
+                    <li>Begin by carefully examining the image labeled "Mesh" (It is the left most image with black border)</li>
+                    <li>Determine if option 1 looks to have the same shape, pose and expression as the mesh</li>
+                    <li>Determine if option 2 looks to have the same shape, pose and expression as the mesh</li>
+                    <li>Click on the one that fits to the image labeled mesh the best, it should get an orange box around it</li>
+                    <li>Click submit and move forward</li>
+                    </ol>
+            </full-instructions>
+</crowd-form>
+
+
+\<style type="text/css" media="screen">
+
+
+.radio {
+    opacity: 0;
+    position: absolute;
+}
+
+.gt {
+ display: inline
+}
+.label1 {
+    background:url('https://gifeval.s3.eu-central-1.amazonaws.com/flame_param_association/images/${OPTION1}')  no-repeat center/cover;
+    background-size:contain;
+    text-indent: -999em;
+    border: 10px solid white;
+    width: 256px;
+    height: 256px;
+    display: block;
+    float: left;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: justify;
+}
+input[type="radio"]:checked + label {
+    border: 10px solid orange;
+}
+
+.label2 {
+    background: url('https://gifeval.s3.eu-central-1.amazonaws.com/flame_param_association/images/${OPTION2}') no-repeat center/cover;
+    background-size:contain;
+    text-indent: -999em;
+    border: 10px solid white;
+    width: 256;
+    height: 256px;
+    display: block;
+    float: left;
+    margin: 10px;
+    display: flex;
+     flex-wrap: wrap;
+     text-align: justify;
+}
+input[type="radio"]:checked + label {
+    border: 10px solid orange;
+}
+
+input[type="radio2"]:checked + label {
+    border: 10px solid black;
+}
+
+div.item {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 256px;
+}
+
+#imagewithcaption {
+width: 256px;
+text-align:center;
+}
+
+.column {
+  float: left;
+  width: 27.33%;
+  padding: 5px;
+  text-align:center;
+  margin: 10px;
+  color: green;
+}
+
+.column2 {
+  float: left;
+  width: 27.33%;
+  padding-top: 10px;
+  margin: 15px;
+  text-align:center;
+  color: black;
+}
+
+
+/* Clear floats after image containers */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.caption {
+    display: block;
+    padding-top: 10px;
+}
+</style>

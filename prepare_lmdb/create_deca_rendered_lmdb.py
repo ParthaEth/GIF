@@ -3,31 +3,22 @@ sys.path.append('../')
 import constants as cnst
 import tqdm
 import numpy as np
-import os
 import torch
-from my_utils.DECA.decalib.DECA import DECA, get_config
-from my_utils.DECA.decalib import util
-import cv2
 import lmdb
 from io import BytesIO
 from PIL import Image
 import time
-from my_utils.DECA.decalib.nets.FLAME import FLAMETex
+from my_utils.visualize_flame_overlay import OverLayViz
+# import matplotlib.pyplot as plt
 
 
+overlay_viz = OverLayViz()
 num_validation_images = -1
 num_files = 70_000
-# num_files = 70
 batch_size = 32
-# num_files = 4
-resolution = 256
+resolution = cnst.flame_config['image_size']
 flame_param_dict = np.load(cnst.all_flame_params_file, allow_pickle=True).item()
 param_files = flame_param_dict.keys()
-
-flame_datapath='../data/'
-config = get_config(flame_datapath)
-flametex = FLAMETex(config).to('cuda')
-deca = DECA(datapath=flame_datapath, device='cuda')
 
 with lmdb.open(cnst.rendered_flame_root, map_size=1024 ** 4, readahead=False) as env:
     with env.begin(write=True) as transaction:
@@ -63,31 +54,25 @@ with lmdb.open(cnst.rendered_flame_root, map_size=1024 ** 4, readahead=False) as
             lightcode = torch.cat(lightcode, dim=0)
 
             # render
-            verts, landmarks2d, landmarks3d = deca.flame(shape_params=shapecode, expression_params=expcode,
-                                                         pose_params=posecode)
-            landmarks2d_projected = util.batch_orth_proj(landmarks2d, cam)
-            landmarks2d_projected[:, :, 1:] *= -1
-            trans_verts = util.batch_orth_proj(verts, cam)
-            trans_verts[:, :, 1:] = -trans_verts[:, :, 1:]
-
-            albedos = flametex(texcode)
-            rendering_results = deca.render(verts, trans_verts, albedos, lights=lightcode, light_type='point')
-            textured_images, normals = rendering_results['images'], rendering_results['normals']
-            normal_images = deca.render.render_normal(trans_verts, normals)
+            normal_images, _, _, _, textured_images = \
+                overlay_viz.get_rendered_mesh((shapecode, expcode, posecode, lightcode, texcode), cam)
 
             count = 0
             for item_id in range(batch_size):
                 i = batch_id * batch_size + item_id
                 if not str(i).zfill(5) + '.pkl' in param_files:
                     continue
-                textured_image = cv2.resize(util.tensor2image(textured_images[count]), (resolution, resolution))
+                textured_image = (textured_images[count].detach().cpu().numpy()*255).astype('uint8').transpose((1, 2, 0))
                 textured_image = Image.fromarray(textured_image)
 
-                normal_image = cv2.resize(util.tensor2image(normal_images[count]), (resolution, resolution))
-                # print(i)
-                if normal_image.shape[0] != resolution:
-                    raise ValueError('None image or something weird happenned!')
+                normal_image = (normal_images[count].detach().cpu().numpy()*255).astype('uint8').transpose((1, 2, 0))
                 normal_image = Image.fromarray(normal_image)
+
+                # # Just for inspection
+                # fig, (ax1, ax2,) = plt.subplots(1, 2)
+                # ax1.imshow(textured_image)
+                # ax2.imshow(normal_image)
+                # plt.savefig(f'{batch_id}_{item_id}.png')
 
                 # Flame rendering
                 key = f'{resolution}-{str(i).zfill(5)}'.encode('utf-8')

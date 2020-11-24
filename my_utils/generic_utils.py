@@ -1,3 +1,7 @@
+import sys
+sys.path.append('../')
+import constants as cnst
+
 import torch
 import torchvision
 import dataset_loaders
@@ -121,7 +125,7 @@ class VisualizationSaver():
 
         torchvision.utils.save_image(
             torch.cat(images, 0),
-            f'sample/{str(run_id)}/{str(i + 1).zfill(6)}_res{resolution}x{resolution}_fid_{fid:.2f}.png',
+            f'{cnst.output_root}sample/{str(run_id)}/{str(i + 1).zfill(6)}_res{resolution}x{resolution}_fid_{fid:.2f}.png',
             nrow=self.gen_i,
             normalize=True,
             range=(0, 1))

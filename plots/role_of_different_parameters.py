@@ -87,9 +87,7 @@ settings_for_runs = \
      8: {'name': 'norm_map_rend_flm_no_tex_interp', 'model_idx': '460000_1', 'normal_maps_as_cond': True,
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},}
 
-overlay_visualizer = OverLayViz(full_neck=False, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=None, texture_pattern_name='MEAN_TEXTURE_WITH_CHKR_BOARD',
-                                flame_version='DECA', image_size=256)
+overlay_visualizer = OverLayViz()
 # overlay_visualizer.setup_renderer(mesh_file=None)
 
 flm_params = np.zeros((num_smpl_to_eval_on, code_size)).astype('float32')

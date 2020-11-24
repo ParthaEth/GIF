@@ -11,36 +11,7 @@ from my_utils.flm_dynamic_fit_overlay import camera_ringnetpp, camera_dynamic
 from my_utils.generic_utils import save_set_of_images
 import glob
 from my_utils.eye_centering import position_to_given_location
-from my_utils.DECA.decalib import util
-
-
-def get_config(datapath):
-    config = {
-            # FLAME
-            'topology_path': os.path.join(datapath, 'head_template.obj'),
-            'flame_model_path': os.path.join(datapath, 'generic_model.pkl'),
-            'flame_lmk_embedding_path': os.path.join(datapath, 'landmark_embedding.npy'),
-            'face_mask_path': os.path.join(datapath, 'face_mask.png'),
-            'camera_params': 3,
-            'shape_params': 100,
-            'detail_params': 100,
-            'expression_params': 50,
-            'pose_params': 6,
-            'tex_params': 50,
-            'light_params': 27,
-            'use_face_contour': True,
-            # test
-            'image_size': 512,
-            'uv_size': 512,
-            'resume_training': True,
-            'pretrained_modelpath': os.path.join(datapath, 'DECA_model.tar'),
-            'tex_basis_path': os.path.join(datapath, 'texture_basis_images_completed.npy'),
-            'tex_mean_path': os.path.join(datapath,  'texture_mean_image_completed.npy'),
-            'useTex': True # Due to the license problem, we are not able to distrubute the texture model
-        }
-    config = util.dict2obj(config)
-
-    return config
+from model.mesh_and_3d_helpers import batch_orth_proj
 
 
 def load_3sigma_flame(directory):
@@ -113,10 +84,7 @@ else:
     back_ground_noise = None
 
 # # Don't provide add rnadom noise to background here. Cause then every frame will have different noise and that's bad
-overlay_visualizer = OverLayViz(full_neck=with_neck, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=back_ground_noise, texture_pattern_name=texture_pattern,
-                                flame_version=flame_version, image_size=256,
-                                deca_conf=get_config(datapath=cnst.deca_data_path))
+overlay_visualizer = OverLayViz()
 # overlay_visualizer.setup_renderer(mesh_file=None)
 
 if flame_version == 'FLAME_2020_revisited':
@@ -217,9 +185,9 @@ texture_code = torch.cat((texture_code, texture_code_neg_3_sigma, texture_code_p
 
 verts, landmarks2d, landmarks3d = overlay_visualizer.deca.flame(shape_params=shape, expression_params=exp,
                                                   pose_params=pose)
-landmarks2d_projected = util.batch_orth_proj(landmarks2d, cam)
+landmarks2d_projected = batch_orth_proj(landmarks2d, cam)
 landmarks2d_projected[:, :, 1:] *= -1
-trans_verts = util.batch_orth_proj(verts, cam)
+trans_verts = batch_orth_proj(verts, cam)
 trans_verts[:, :, 1:] = -trans_verts[:, :, 1:]
 
 right_albedos = overlay_visualizer.flametex(texture_code)

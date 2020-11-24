@@ -1,7 +1,3 @@
-# Notice: Incomplete Code:
-
-Due to licencing reasons, some essential parts of the code could not be released. We are working towards fixing this issue. As of now, the code is not runnable, but one can browse through the structure and pick up hyper parameters. Thanks for understanding.
-
 # GIF: Generative Interpretable Faces
 This is the official inmplentation fo the paper GIF: Generative Interpretable Faces - https://arxiv.org/abs/2009.00149.
 GIF is a photorealistic generative face model with explicit 3D geometric and photometric control.
@@ -27,7 +23,8 @@ If you find our work useful in your project please cite us as
 
 ## First thing first
 Before Running any program you will need to download a few resource files and create a suitable placeholder for the training atifacts to be stored.
- 1. you can use this link to do so <#TODO get link from benjamin>
+ 0. you can use this link to do so <# files to appear soon>
+ 1. Clone with all the submodules e.g. `git clone --recurse-submodules git@github.com:ParthaEth/GIF.git`
  2. Unzip the downloaded `GIF_resources.zip` file in a suitable location. Rmember that the model atifacts can easily become a few 10s of terabytes.
  3. Now you need to provide the path to this directory in the `constants.py` script.
  4. Edit the line `resources_root = '/path/to/the/unzipped/location/of/GIF_resources'`
@@ -44,6 +41,15 @@ To train GIF you will need to prepare two lmdb datasets
     3. Here `DATASET_PATH` is the parth to the directory that contains the FFHQ images
 2. An LMDB dataset containing renderings of the FLAME model
     1. To create this simply run `python create_deca_rendered_lmdb.py`
+    
+#### Training
+* To resume training from a checkpoint run
+`python train.py --run_id <runid> --ckpt /path/to/saved.mdl/file/<runid>/026000_1.model`
+
+* To start training from scratch run 
+`python train.py --run_id <runid>`
+
+Note that the training code will take all available GPUs in the system and perform data parallelization. you can set visible GPUs by etting the `CUDA_VISIBLE_DEVICES` environment variable. Run `CUDA_VISIBLE_DEVICES=0,1 python train.py --run_id <runid>` to run on GPU 0 and 1 
 
 #### To run random face generation follow the following steps
 1. Clone this repo
@@ -80,4 +86,4 @@ __Disclaimer: This section can be outdated and/or have changed since the time of
 
 ## Acknowledgements
 We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. 
-The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).
+We specially thank Taylor McConnell for voicing over out video. The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).

@@ -12,8 +12,10 @@ import random
 from model.stylegan2_common_layers import StyledConv, get_w_frm_z, ToRGB
 from my_utils.graph_writer import graph_writer
 
-from my_utils.DECA.decalib.DECA import DECA
-from my_utils.DECA.decalib import util
+from my_utils.photometric_optimization.models import FLAME
+from model import mesh_and_3d_helpers
+from my_utils.photometric_optimization import gif_helper
+from my_utils.photometric_optimization import util
 
 
 class ConstantInput(nn.Module):
@@ -342,7 +344,10 @@ class FlameTextureSpace(nn.Module):
         self.texture_data = texture_data
         self.data_un_normalizer = data_un_normalizer
 
-        self.deca = DECA(datapath=cnst.deca_data_path, device='cuda')
+        config_obj = util.dict2obj(cnst.flame_config)
+        render_utils = gif_helper.render_utils(config_obj)
+        self.faces = render_utils.get_flame_faces()
+        self.flame = FLAME.FLAME(config_obj)
 
         self.x_coords = self.texture_data.get('x_coords').astype('int')
         self.y_coords = self.texture_data.get('y_coords').astype('int')
@@ -361,15 +366,14 @@ class FlameTextureSpace(nn.Module):
                         flame_params_full[:, 156:159])  # camera (scale, x_shift, y_shift)
 
         shape, expression, pose, camera_params = flame_params
-        verts, landmarks2d, landmarks3d = self.deca.flame(shape_params=shape, expression_params=expression,
-                                                     pose_params=pose)
+        verts, _, _ = self.flame(shape_params=shape, expression_params=expression, pose_params=pose)
         target_mesh_vertices = verts
 
         # Compute vertex normals
-        trans_verts = util.batch_orth_proj(target_mesh_vertices, camera_params)
+        trans_verts = mesh_and_3d_helpers.batch_orth_proj(target_mesh_vertices, camera_params)
         trans_verts[:, :, 1:] = -trans_verts[:, :, 1:]
-        vertex_normals = util.vertex_normals(
-            trans_verts, self.deca.render.faces.expand(shape.shape[0], -1, -1))
+        vertex_normals = mesh_and_3d_helpers.vertex_normals(
+            trans_verts, self.faces.expand(shape.shape[0], -1, -1))
 
         return self.compute_texture_map(source_img, target_mesh_vertices, vertex_normals,
                                         camera_params=camera_params)
@@ -398,7 +402,7 @@ class FlameTextureSpace(nn.Module):
         # proj_2d_points_normalized had pixels between +- 1 since grid requires that. if you unnormalize them yo will
         # get complimentoryask-like image. i.e. don't do
         # proj_2d_points_normalized = * source_img_size/2 + source_img_size/2 * source_img_size/2 +  source_img_size/2
-        proj_2d_points_normalized = util.batch_orth_proj(pixel_3d_points, camera_params)[:, :, :2]
+        proj_2d_points_normalized = mesh_and_3d_helpers.batch_orth_proj(pixel_3d_points, camera_params)[:, :, :2]
         proj_2d_points_normalized[:, :, 1] *= -1
 
         texture_grid = torch.zeros((source_img.shape[0], 256, 256, 2), dtype=torch.float32, device=source_img.device)
@@ -419,70 +423,3 @@ class FlameTextureSpace(nn.Module):
 
         # return fast_image_reshape(texture_img, source_img.shape[2], source_img.shape[3])
         return texture_img, texture_vis_mask
-
-    def save_obj(self, filename, vertices, faces, tex_vertices=[], tex_faces=[]):
-        """Saves a mesh object. Used only to debug"""
-        fp = open(filename, 'w')
-        fp.write('# OBJ File\n')
-        for vc in vertices:
-            fp.write('v %.6f %.6f %.6f\n' % (vc[0], vc[1], vc[2]))
-        for f in faces:
-            fp.write('f')
-            for n in f:
-                fp.write(' %d' % (n + 1))
-            fp.write('\n')
-        for vt in tex_vertices:
-            fp.write('vt %.6f %.6f\n' % (vt[0], vt[1]))
-        for ft in tex_faces:
-            fp.write('ft')
-            for n in ft:
-                fp.write(' %d' % (n + 1))
-            fp.write('\n')
-        fp.close()
-
-    def debug_np_code(self, camera_params, target_mesh_v, vertex_normals, source_img):
-        """Performs texture stealing using timo's code. JUst for debuging"""
-        x_coords = self.texture_data.get('x_coords').astype('float32')
-        y_coords = self.texture_data.get('y_coords').astype('float32')
-        valid_pixel_ids = self.texture_data.get('valid_pixel_ids').astype('int')
-        valid_pixel_3d_faces = torch.from_numpy(self.texture_data.get('valid_pixel_3d_faces').astype('int')).cuda()
-        valid_pixel_b_coords = torch.from_numpy(self.texture_data.get('valid_pixel_b_coords').astype('float32')).cuda()
-
-        pixel_3d_points = \
-            target_mesh_v[:, valid_pixel_3d_faces[:, 0], :] * valid_pixel_b_coords[:, 0][None, :, None] + \
-            target_mesh_v[:, valid_pixel_3d_faces[:, 1], :] * valid_pixel_b_coords[:, 1][None, :, None] + \
-            target_mesh_v[:, valid_pixel_3d_faces[:, 2], :] * valid_pixel_b_coords[:, 2][None, :, None]
-
-        self.save_obj('./texture_stl/debug_mesh.obj', pixel_3d_points[0], self.texture_data.get('f'))
-        # projection code Timo debug only
-        source_img = source_img.cpu().numpy().transpose((0, 2, 3, 1))[0]
-        pixel_3d_points[0, :, 0] = pixel_3d_points[0, :, 0] + camera_params[0, 1]
-        pixel_3d_points[0, :, 1] = pixel_3d_points[0, :, 1] + camera_params[0, 2]
-        pixel_3d_points = pixel_3d_points.cpu().numpy()
-        camera_params = camera_params.cpu().numpy()
-        target_scale = camera_params[0, 0]
-        # import ipdb; ipdb.set_trace()
-        image_size = source_img.shape[0]
-        proj_2d_points = np.round(target_scale * pixel_3d_points[0][:, :2] * image_size/2 + image_size/2, 0).astype(int)
-        proj_2d_points[:, 1] = image_size - proj_2d_points[:, 1]
-        print(proj_2d_points)
-
-        # Normal computation for visibility
-        # vertex_normals = target_mesh.estimate_vertex_normals()
-        # import ipdb; ipdb.set_trace()
-        pixel_3d_normals = vertex_normals[:, valid_pixel_3d_faces[:, 0], :] * valid_pixel_b_coords[:, 0][None :, None] + \
-                           vertex_normals[:, valid_pixel_3d_faces[:, 1], :] * valid_pixel_b_coords[:, 1][None :, None] + \
-                           vertex_normals[:, valid_pixel_3d_faces[:, 2], :] * valid_pixel_b_coords[:, 2][None :, None]
-        pixel_3d_normals = pixel_3d_normals[0]
-        # n_dot_view = -pixel_3d_normals[:, 2]
-
-        texture = np.zeros((256, 256, 3))
-        # import ipdb; ipdb.set_trace()
-        for i, (x, y) in enumerate(proj_2d_points):
-            if x > 0 and x < source_img.shape[1] and y > 0 and y < source_img.shape[0] and pixel_3d_normals[i, -1] < 0:
-                texture[y_coords[valid_pixel_ids[i]].astype(int), x_coords[valid_pixel_ids[i]].astype(int), :3] = \
-                    source_img[y, x]
-        tex_pil_img = Image.fromarray((texture * 255).astype('uint8'))
-        tex_pil_img.save('./texture_stl/texture_image.png')
-        exit(0)
-        return texture

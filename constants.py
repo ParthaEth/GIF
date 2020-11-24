@@ -38,9 +38,16 @@ save_dir_voca_vid = f'{output_root}voca_video'
 voca_flame_seq_file = f'{input_root_dir}sentence36.npz'
 
 ffhq_images_root_dir = '/raid/data/pghosh/face_gan_data/FFHQ/images1024x1024/'
-all_flame_params_file = f'{deca_inferred_root}/deca_flame_params_camera_corrected.npy'
+
+
+
+# all_flame_params_file = f'{deca_inferred_root}/deca_flame_params_camera_corrected.npy'
+all_flame_params_file = f'{deca_inferred_root}/flame_params_public_texture_model.npy'
+
+
+
 true_iamge_lmdb_path = f'{input_root_dir}/FFHQ/multiscale.lmdb'
-rendered_flame_root = f'{deca_inferred_root}/deca_rendered_with_texture.lmdb'
+rendered_flame_root = f'{deca_inferred_root}/deca_rendered_with_public_texture.lmdb'
 true_img_stats_dir = f'{deca_inferred_root}/FFHQ/ffhq_fid_stats/'
 face_region_mask_file = f'{flame_resource_path}texture_map_256X256_face_only_mask.png'
 flm_3_sigmaparams_dir = f'{input_root_dir}/GIF_teaser/data/'
@@ -56,3 +63,25 @@ random_imagesdestination_dir = output_root
 amt_bucket_base_url = 'https://flameparameterassociation.s3-eu-west-1.amazonaws.com'
 five_pt_likert_scale_result_csv_path = f'{input_root_dir}/mturk_results/textured_rend_flm_asso_right_likert_scale.csv'
 flame_style_vec_association_result_csv_path = f'{input_root_dir}/mturk_results/Result_flm_asso_10k.csv'
+
+flame_config = {
+        # FLAME
+        'flame_model_path': f'{flame_resource_path}generic_model.pkl',  # acquire it from FLAME project page
+        'flame_lmk_embedding_path': f'{flame_resource_path}landmark_embedding.npy',
+        'mesh_file': f'{flame_resource_path}head_template_mesh.obj',
+
+        'tex_space_path': f'{flame_resource_path}FLAME_texture.npz',  # acquire it from FLAME project page
+        # 'tex_space_path': f'{flame_resource_path}FLAME_basel_texture.npz',  # acquire it from FLAME project page
+
+
+        'camera_params': 3,
+        'shape_params': 100,
+        'expression_params': 50,
+        'pose_params': 6,
+        'tex_params': 50,
+        'use_face_contour': True,
+
+        'cropped_size': 256,
+        'batch_size': 1,
+        'image_size': 256,
+    }

@@ -1,0 +1,3 @@
+[submodule "my_utils/photometric_optimization"]
+	path = my_utils/photometric_optimization
+	url = https://github.com/ParthaEth/photometric_optimization.git

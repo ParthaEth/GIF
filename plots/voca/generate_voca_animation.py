@@ -12,6 +12,8 @@ from my_utils.eye_centering import position_to_given_location
 import os
 import argparse
 from configurations import update_config
+from my_utils.photometric_optimization.models import FLAME
+from my_utils.photometric_optimization import util
 
 ###################################### Voca training Seq ######################################################
 ignore_global_rotation = False
@@ -46,11 +48,10 @@ flame_shape = np.repeat(shape_seq[np.newaxis, :].astype('float32'), (num_frames,
 flm_batch = np.hstack((flame_shape, seqs['frame_exp_params'], pose, translation)).astype('float32')
 flm_batch = torch.from_numpy(flm_batch).cuda()
 
-overlay_visualizer = OverLayViz(full_neck=False, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=None, texture_pattern_name='MEAN_TEXTURE_WITH_CHKR_BOARD',
-                                flame_version='DECA', image_size=256)
+overlay_visualizer = OverLayViz()
 
-flame_decoder = overlay_visualizer.deca.flame.eval()
+config_obj = util.dict2obj(cnst.flame_config)
+flame_decoder = FLAME.FLAME(config_obj).cuda().eval()
 flm_batch = position_to_given_location(flame_decoder, flm_batch)
 
 
@@ -101,7 +102,7 @@ for id in tqdm.tqdm(ids_to_pick):
                                                                torch.from_numpy(light_code).cuda(),
                                                                torch.from_numpy(texture_code).cuda()),
                                                  camera_params=cam_batch, cull_backfaces=True,
-                                                 grey_texture=True)
+                                                 constant_albedo=0.6)
         rend_flm_batch_to_save = torch.clamp(rend_flm_batch_to_save, 0, 1) * 2 - 1
         norma_map_img_batch_to_save = torch.clamp(norma_map_img_batch_to_save, 0, 1) * 2 - 1
         rend_flm_batch_to_save = fast_image_reshape(rend_flm_batch_to_save, height_out=256, width_out=256, mode='bilinear')

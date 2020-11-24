@@ -191,14 +191,14 @@ def get_gif_from_list_of_params(generator, flame_params, step, alpha, noise, ove
     # cam_t = np.array([0., 0., 2.5])
     # camera_params = camera_dynamic((224, 224), cam_t)
     if overlay_visualizer is None:
-        overlay_visualizer = OverLayViz(add_random_noise_to_background=False)
+        overlay_visualizer = OverLayViz()
 
     fixed_embeddings = torch.ones(flame_params.shape[0], dtype=torch.long, device='cuda')*13
     # print(generator.module.get_embddings()[fixed_embeddings])
     flame_params_unnorm = flame_params * flame_std + flame_mean
 
     flame_params_unnorm = torch.from_numpy(flame_params_unnorm).cuda()
-    normal_map_img, pos_mask, alpha_images, key_points2d, rend_imgs = \
+    normal_map_img, _, _, _, rend_imgs = \
         overlay_visualizer.get_rendered_mesh(flame_params=(flame_params_unnorm[:, SHAPE_IDS[0]:SHAPE_IDS[1]],
                                                            flame_params_unnorm[:, EXP_IDS[0]:EXP_IDS[1]],
                                                            flame_params_unnorm[:, POSE_IDS[0]:POSE_IDS[1]],
@@ -225,12 +225,6 @@ def get_gif_from_list_of_params(generator, flame_params, step, alpha, noise, ove
     fake_images = overlay_visualizer.range_normalize_images(fast_image_reshape(fake_images,
                                                                                height_out=rend_imgs.shape[2],
                                                                                width_out=rend_imgs.shape[3]))
-    if overlay_landmarks:
-        if key_points2d.shape[-2] > 68:
-            key_points2d = key_points2d[:, 17:, :]
-        fake_images_overlay = tensor_vis_landmarks(fake_images, key_points2d)
-        fake_images = torch.cat([fake_images.cpu(), fake_images_overlay], dim=-1)
-
     if rendered_flame_as_condition:
         fake_images = torch.cat([fake_images.cpu(), (rend_imgs.cpu() + 1)/2], dim=-1)
 

@@ -58,9 +58,7 @@ flame_shape = np.repeat(seqs['seq_shape_params'][np.newaxis, :].astype('float32'
 flm_batch = np.hstack((flame_shape, seqs['frame_exp_params'], pose, translation)).astype('float32')[::8]
 flm_batch = torch.from_numpy(flm_batch).cuda()
 
-overlay_visualizer = OverLayViz(full_neck=False, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=None, texture_pattern_name='MEAN_TEXTURE_WITH_CHKR_BOARD',
-                                flame_version='DECA', image_size=256)
+overlay_visualizer = OverLayViz()
 
 flame_decoder = overlay_visualizer.deca.flame.eval()
 flm_batch = position_to_given_location(flame_decoder, flm_batch)

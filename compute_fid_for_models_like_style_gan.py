@@ -14,6 +14,8 @@ import torch
 from my_utils import generic_utils
 from my_utils.eye_centering import position_to_given_location
 from copy import deepcopy
+from my_utils.photometric_optimization.models import FLAME
+from my_utils.photometric_optimization import util
 
 
 def ge_gen_in(flm_params, textured_rndr, norm_map, normal_map_cond, texture_cond):
@@ -88,9 +90,7 @@ settings_for_runs = \
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},}
 
 
-overlay_visualizer = OverLayViz(full_neck=False, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=None, texture_pattern_name='MEAN_TEXTURE_WITH_CHKR_BOARD',
-                                flame_version='DECA', image_size=256)
+overlay_visualizer = OverLayViz()
 # overlay_visualizer.setup_renderer(mesh_file=None)
 
 flm_params = np.zeros((num_smpl_to_eval_on, code_size)).astype('float32')
@@ -114,7 +114,8 @@ jaw_rot_range = (0, np.pi/8)
 jaw_rot_sigmas = np.linspace(0, (jaw_rot_range[1] - jaw_rot_range[0])/6, num_sigmas)
 pose_range = (-np.pi/3, np.pi/3)
 pose_sigmas = np.linspace(0, (pose_range[1] - pose_range[0])/6, num_sigmas)
-flame_decoder = overlay_visualizer.deca.flame.eval()
+config_obj = util.dict2obj(cnst.flame_config)
+flame_decoder = FLAME.FLAME(config_obj).cuda().eval()
 
 for run_idx in run_ids_1:
     # import ipdb; ipdb.set_trace()

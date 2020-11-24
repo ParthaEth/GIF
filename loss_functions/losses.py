@@ -128,9 +128,7 @@ class InterpolatedTextureLoss:
     def __init__(self, max_images_in_batch):
         texture_data = np.load(cnst.flame_texture_space_dat_file, allow_pickle=True, encoding='latin1').item()
         self.flm_tex_dec = FlameTextureSpace(texture_data, data_un_normalizer=None).cuda()
-        self.flame_visualizer = OverLayViz(add_random_noise_to_background=False, full_neck=False, background_img=None,
-                                           flame_version='FLAME_2020_revisited',
-                                           texture_pattern_name='MEAN_TEXTURE_WITH_CHKR_BOARD')
+        self.flame_visualizer = OverLayViz()
         self.face_region_only_mask = np.array(Image.open(cnst.face_region_mask_file))[:, :, 0:1].transpose((2, 0, 1))
         self.face_region_only_mask = (torch.from_numpy(self.face_region_only_mask.astype('float32'))/255.0)[None, ...]
         print('read face region mask')

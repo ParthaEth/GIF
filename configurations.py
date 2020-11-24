@@ -14,12 +14,6 @@ def parse_args(parser):
     parser.add_argument('--ckpt', default=None, type=str, help='load from previous checkpoints')
     parser.add_argument('--debug', default=False, type=bool,
                         help='Lowers batchsize and nuber of flame params loaded for quick debug')
-    try:
-        savae_dir_default = os.environ['SM_MODEL_DIR']
-    except KeyError as e:
-        # Kept for sage maker id the env. var is not set just go with empty string
-        savae_dir_default = '.'
-    parser.add_argument('--chk_pt_dir', type=str, default=savae_dir_default)
 
     parser.add_argument(
         '--no_from_rgb_activate',
@@ -37,7 +31,47 @@ def update_config(parser):
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5), inplace=True),])
 
-    if args.run_id == 3:
+    if args.run_id == 0: # GIF full model re-run from scratch
+        args.conditional_discrim = True
+        args.flame_dims = 159
+        args.embedding_vocab_size = -1
+        args.embedding_reg_weight = 0
+        args.gen_reg_type = 'None'
+        args.use_also_img_only_discrim = False
+        args.use_inst_norm = True
+        args.use_posed_constant_input = False
+        args.use_styled_conv_stylegan2 = True
+        args.shfld_cond_as_neg_smpl = False
+        args.core_tensor_res = 4
+        args.init_size = 256
+        args.max_size = 256
+        args.nmlp_for_z_to_w = 8
+        args.adaptive_interp_loss = False
+
+        args.normal_maps_as_cond = True
+        args.add_low_res_shortcut = False
+        args.rendered_flame_as_condition = True
+        args.apply_texture_space_interpolation_loss = True
+
+        params_dir = cnst.all_flame_params_file
+        data_root = cnst.true_iamge_lmdb_path
+        rendered_flame_root = cnst.rendered_flame_root
+        normalization_file_path = None
+
+        args.apply_sqrt_in_eq_linear = False
+        flame_param_est = None
+
+        # import ipdb; ipdb.set_trace()
+        list_bad_images = np.load(cnst.list_deca_failed_iamges)['bad_images']
+        dataset = FFHQ(real_img_root=data_root, rendered_flame_root=rendered_flame_root, params_dir=params_dir,
+                       generic_transform=generic_transform, pose_cam_from_yao=False,
+                       rendered_flame_as_condition=args.rendered_flame_as_condition, resolution=256,
+                       normalization_file_path=normalization_file_path, debug=args.debug, random_crop=False,
+                       get_normal_images=args.normal_maps_as_cond, flame_version='DECA',
+                       list_bad_images=list_bad_images)
+        args.phase = 600_000 / 5
+
+    elif args.run_id == 3: # normal map only, Will fine tune
         args.conditional_discrim = True
         args.flame_dims = 159
         args.embedding_vocab_size = -1
@@ -77,7 +111,7 @@ def update_config(parser):
                        list_bad_images=list_bad_images)
         args.phase = 600_000/5
 
-    elif args.run_id == 7:
+    elif args.run_id == 7: # FLame rendering only will fine tune
         args.conditional_discrim = True
         args.flame_dims = 159
         args.embedding_vocab_size = -1
@@ -116,7 +150,7 @@ def update_config(parser):
                        list_bad_images=list_bad_images)
         args.phase = 600_000/5
 
-    elif args.run_id == 8:
+    elif args.run_id == 8: # Vector conditioning. Need to run in seperate branch
         args.conditional_discrim = True
         args.flame_dims = 159
         args.embedding_vocab_size = -1
@@ -132,9 +166,9 @@ def update_config(parser):
         args.max_size = 256
         args.nmlp_for_z_to_w = 8
 
-        args.normal_maps_as_cond = True
+        args.normal_maps_as_cond = False
         args.add_low_res_shortcut = False
-        args.rendered_flame_as_condition = True
+        args.rendered_flame_as_condition = False
         args.apply_texture_space_interpolation_loss = False
 
         params_dir = cnst.all_flame_params_file
@@ -155,13 +189,12 @@ def update_config(parser):
                        list_bad_images=list_bad_images)
         args.phase = 600_000/5
 
-    elif args.run_id == 29:
+    elif args.run_id == 29: # Full GIF model will fine tune
         args.conditional_discrim = True
         args.flame_dims = 159
         args.embedding_vocab_size = -1
         args.embedding_reg_weight = 0
         args.gen_reg_type = 'None'
-        args.texture_space_discrimination = False
         args.use_also_img_only_discrim = False
         args.use_inst_norm = True
         args.use_posed_constant_input = False

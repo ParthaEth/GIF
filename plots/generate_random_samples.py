@@ -15,6 +15,8 @@ import torch
 from my_utils import generic_utils
 from my_utils.eye_centering import position_to_given_location
 from copy import deepcopy
+from my_utils.photometric_optimization.models import FLAME
+from my_utils.photometric_optimization import util
 
 
 def ge_gen_in(flm_params, textured_rndr, norm_map, normal_map_cond, texture_cond):
@@ -63,7 +65,7 @@ core_tensor_res = 4
 resolution = 256
 alpha = 1
 step_max = int(np.log2(resolution) - 2)
-num_smpl_to_eval_on = 2048
+num_smpl_to_eval_on = 128
 use_styled_conv_stylegan2 = True
 
 flength = 5000
@@ -71,10 +73,10 @@ cam_t = np.array([0., 0., 0])
 camera_params = camera_ringnetpp((512, 512), trans=cam_t, focal=flength)
 
 # Uncomment the appropriate run_id
-# run_ids_1 = [29, ]  # with sqrt(2)
+run_ids_1 = [29, ]  # with sqrt(2)
 # run_ids_1 = [7, 24, 8, 3]
 # run_ids_1 = [7, 8, 3]
-run_ids_1 = [7]
+# run_ids_1 = [7]
 
 settings_for_runs = \
     {24: {'name': 'vector_cond', 'model_idx': '216000_1', 'normal_maps_as_cond': False,
@@ -89,9 +91,7 @@ settings_for_runs = \
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},}
 
 
-overlay_visualizer = OverLayViz(full_neck=False, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=None, texture_pattern_name='MEAN_TEXTURE_WITH_CHKR_BOARD',
-                                flame_version='DECA', image_size=256)
+overlay_visualizer = OverLayViz()
 # overlay_visualizer.setup_renderer(mesh_file=None)
 
 flm_params = np.zeros((num_smpl_to_eval_on, code_size)).astype('float32')
@@ -107,6 +107,7 @@ for i, key in enumerate(fl_param_dict):
     pose = np.array([0, np.random.uniform(-np.pi / 8, np.pi / 8, 1), 0,
                      np.random.uniform(0, np.pi / 12, 1), 0, 0]).astype('float32')
     texture = np.random.normal(0, 1, [50]).astype('float32')
+    # texture = flame_param['tex']
     flame_param = np.hstack((shape_params, exp_params, pose, flame_param['cam'],
                              texture, flame_param['lit'].flatten()))
     # tz = camera_params['f'][0] / (camera_params['c'][0] * flame_param[:, 156:157])
@@ -125,7 +126,8 @@ jaw_rot_range = (0, np.pi/8)
 jaw_rot_sigmas = np.linspace(0, (jaw_rot_range[1] - jaw_rot_range[0])/6, num_sigmas)
 pose_range = (-np.pi/3, np.pi/3)
 pose_sigmas = np.linspace(0, (pose_range[1] - pose_range[0])/6, num_sigmas)
-flame_decoder = overlay_visualizer.deca.flame.eval()
+config_obj = util.dict2obj(cnst.flame_config)
+flame_decoder = FLAME.FLAME(config_obj).cuda().eval()
 
 for run_idx in run_ids_1:
     # import ipdb; ipdb.set_trace()
@@ -182,16 +184,23 @@ for run_idx in run_ids_1:
                     overlay_visualizer.get_rendered_mesh(flame_params=(shape, exp, pose, light_code, texture_code),
                                                          camera_params=cam)
                 # import ipdb; ipdb.set_trace()
+
                 rend_flm = torch.clamp(rend_flm, 0, 1) * 2 - 1
                 norma_map_img = torch.clamp(norma_map_img, 0, 1) * 2 - 1
                 rend_flm = fast_image_reshape(rend_flm, height_out=256, width_out=256, mode='bilinear')
                 norma_map_img = fast_image_reshape(norma_map_img, height_out=256, width_out=256, mode='bilinear')
 
                 # Render the 2nd time to get backface culling and white texture
+                # norma_map_img_to_save, _, _, _, rend_flm_to_save = \
+                #     overlay_visualizer.get_rendered_mesh(flame_params=(shape, exp, pose, light_code, texture_code),
+                #                                          camera_params=cam, cull_backfaces=True, constant_albedo=0.6)
+                # Back face culling temporarily un-availabe
+
                 norma_map_img_to_save, _, _, _, rend_flm_to_save = \
                     overlay_visualizer.get_rendered_mesh(flame_params=(shape, exp, pose, light_code, texture_code),
-                                                         camera_params=cam, cull_backfaces=True, grey_texture=True)
+                                                         camera_params=cam, cull_backfaces=False, constant_albedo=0.6)
                 rend_flm_to_save = torch.clamp(rend_flm_to_save, 0, 1) * 2 - 1
+                # rend_flm_to_save = rend_flm
                 # norma_map_img_to_save = torch.clamp(norma_map_img, 0, 1) * 2 - 1
                 rend_flm_to_save = fast_image_reshape(rend_flm_to_save, height_out=256, width_out=256, mode='bilinear')
                 # norma_map_img_to_save = fast_image_reshape(norma_map_img, height_out=256, width_out=256, mode='bilinear')

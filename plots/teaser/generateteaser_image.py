@@ -88,9 +88,7 @@ if random_background:
 else:
     back_ground_noise = None
 # # Don't provide add rnadom noise to background here. Cause then every frame will have different noise and that's bad
-overlay_visualizer = OverLayViz(full_neck=with_neck, add_random_noise_to_background=False, inside_mouth_faces=True,
-                                background_img=back_ground_noise, texture_pattern_name=texture_pattern,
-                                flame_version=flame_version, image_size=256)
+overlay_visualizer = OverLayViz()
 # overlay_visualizer.setup_renderer(mesh_file=None)
 
 if flame_version == 'FLAME_2020_revisited':

@@ -129,19 +129,13 @@ def train(args, dataset, generator, discriminator_flm, fid_computer, flame_param
         flm_rndr = flm_rndr[0].cuda()
         input_indices = input_indices.cuda()
 
-        flm_lbls_with_shuffled_flame = flm_lbls
-        flm_rndr_with_shuffled_flame = flm_rndr
-
         b_size = args.batch.get(resolution, args.batch_default)
         used_samples += b_size
 
-        # real_image_list = [real_img.cuda() for real_img in real_image_list]
-
-        for real_image in real_image_list:  # using grad pen for only the highest res
+        for real_image in real_image_list:
             real_image.requires_grad = True
-        flm_lbls_with_shuffled_flame.requires_grad = not args.texture_space_discrimination
 
-        real_img_condition = flm_rndr_with_shuffled_flame
+        real_img_condition = flm_rndr
 
         real_img_condition.requires_grad = True
         # import ipdb; ipdb.set_trace()
@@ -258,7 +252,7 @@ def train(args, dataset, generator, discriminator_flm, fid_computer, flame_param
             generic_utils.requires_grad(generator, False)
 
         if (i + 1) % 1000 == 0:
-            md_chk_pt_name = f'{args.chk_pt_dir}/checkpoint/{str(args.run_id)}/{str(i + 1).zfill(6)}_{alpha}.model'
+            md_chk_pt_name = f'{cnst.output_root}checkpoint/{str(args.run_id)}/{str(i + 1).zfill(6)}_{alpha}.model'
 
             chk_pt_dict = {'generator_running': g_running.state_dict(),
                            'generator': generator.state_dict(),

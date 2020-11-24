@@ -86,4 +86,4 @@ __Disclaimer: This section can be outdated and/or have changed since the time of
 
 ## Acknowledgements
 We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. 
-We specially thank Taylor McConnell for voicing over out video. The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).
+We specially thank Taylor McConnell for voicing over our video. The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).

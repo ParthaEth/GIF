@@ -8,7 +8,7 @@ GIF is a photorealistic generative face model with explicit 3D geometric and pho
 * video demo https://www.youtube.com/watch?v=-ezPAHyNH9s
 
 ## Watch a brief presentation
-[![Watch a presentation](presentation/presentation_vid.png)](https://www.youtube.com/embed/-ezPAHyNH9s)
+[![Watch a presentation](presentation/presentation_vid.png)](https://youtu.be/-ezPAHyNH9s)
 
 ### Citation
 If you find our work useful in your project please cite us as 

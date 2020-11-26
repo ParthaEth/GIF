@@ -34,7 +34,7 @@ Before Running any program you will need to download a few resource files and cr
  3. Now you need to provide the path to this directory in the `constants.py` script.
  4. Edit the line `resources_root = '/path/to/the/unzipped/location/of/GIF_resources'`
  5. Modify any other paths as you need
- 6. Since we are not allowed to redistribute FLAME we ask you to download it form here - https://flame.is.tue.mpg.de/
+ 6. Download the FLAME 2020 model and the FLAME texture space from here - https://flame.is.tue.mpg.de/ (you need to sign up and agree to the license for access)
  7. Please make sure to dowload 2020 version. After signing in you sould be able to download `FLAME 2020`
  8. Please place the `generic_model.pkl` file in `GIF_resources/input_files/DECA_inferred/data`
 

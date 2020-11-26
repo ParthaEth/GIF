@@ -2,8 +2,13 @@
 This is the official inmplentation fo the paper GIF: Generative Interpretable Faces - https://arxiv.org/abs/2009.00149.
 GIF is a photorealistic generative face model with explicit 3D geometric and photometric control.
 * __Key words:__ _Generative Interpretable Faces, conditional generative models, 3D conditioning of GANs, explicit 3D control of photorealistic faces, Photorealistic faces._
-### Project page
-https://gif.is.tue.mpg.de/
+### Important links
+* Project page https://gif.is.tue.mpg.de/
+* Paper pdf https://arxiv.org/abs/2009.00149
+* video demo https://www.youtube.com/watch?v=-ezPAHyNH9s
+
+## Watch a brief presentation
+[![Watch a presentation](presentation/presentation_vid.png)](https://www.youtube.com/embed/-ezPAHyNH9s)
 
 ### Citation
 If you find our work useful in your project please cite us as 

@@ -80,13 +80,13 @@ run_ids_1 = [29, ]  # with sqrt(2)
 settings_for_runs = \
     {24: {'name': 'vector_cond', 'model_idx': '216000_1', 'normal_maps_as_cond': False,
           'rendered_flame_as_condition': False, 'apply_sqrt2_fac_in_eq_lin': False},
-     29: {'name': 'full_model', 'model_idx': '026000_1', 'normal_maps_as_cond': True,
+     29: {'name': 'full_model', 'model_idx': '294000_1', 'normal_maps_as_cond': True,
           'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': True},
-     7: {'name': 'flm_rndr_tex_interp', 'model_idx': '488000_1', 'normal_maps_as_cond': False,
+     7: {'name': 'flm_rndr_tex_interp', 'model_idx': '051000_1', 'normal_maps_as_cond': False,
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},
-     3: {'name': 'norm_mp_tex_interp', 'model_idx': '040000_1', 'normal_maps_as_cond': True,
+     3: {'name': 'norm_mp_tex_interp', 'model_idx': '203000_1', 'normal_maps_as_cond': True,
          'rendered_flame_as_condition': False, 'apply_sqrt2_fac_in_eq_lin': False},
-     8: {'name': 'norm_map_rend_flm_no_tex_interp', 'model_idx': '460000_1', 'normal_maps_as_cond': True,
+     8: {'name': 'norm_map_rend_flm_no_tex_interp', 'model_idx': '009000_1', 'normal_maps_as_cond': True,
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},}
 
 
@@ -119,13 +119,14 @@ flame_decoder = FLAME.FLAME(config_obj).cuda().eval()
 
 for run_idx in run_ids_1:
     # import ipdb; ipdb.set_trace()
-    generator_1 = torch.nn.DataParallel(StyledGenerator(embedding_vocab_size=69158,
-                        rendered_flame_ascondition=settings_for_runs[run_idx]['rendered_flame_as_condition'],
-                        normal_maps_as_cond=settings_for_runs[run_idx]['normal_maps_as_cond'],
-                        core_tensor_res=core_tensor_res,
-                        w_truncation_factor=1.0,
-                        apply_sqrt2_fac_in_eq_lin=settings_for_runs[run_idx]['apply_sqrt2_fac_in_eq_lin'],
-                        n_mlp=8)).cuda()
+    generator_1 = torch.nn.DataParallel(StyledGenerator(
+        embedding_vocab_size=69158,
+        rendered_flame_ascondition=settings_for_runs[run_idx]['rendered_flame_as_condition'],
+        normal_maps_as_cond=settings_for_runs[run_idx]['normal_maps_as_cond'],
+        core_tensor_res=core_tensor_res,
+        w_truncation_factor=1.0,
+        apply_sqrt2_fac_in_eq_lin=settings_for_runs[run_idx]['apply_sqrt2_fac_in_eq_lin'],
+        n_mlp=8)).cuda()
     model_idx = settings_for_runs[run_idx]['model_idx']
     ckpt1 = torch.load(f'{cnst.output_root}checkpoint/{run_idx}/{model_idx}.model')
     generator_1.load_state_dict(ckpt1['generator_running'])

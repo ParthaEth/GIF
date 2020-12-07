@@ -65,14 +65,12 @@ n_frames = 32
 step_max = int(np.log2(resolution) - 2)  # starts from 4X4 hence the -2
 
 torch.manual_seed(7)
-generator = StyledGenerator(flame_dim=code_size,
-                            embedding_vocab_size=69158,
-                            rendered_flame_ascondition=rendered_flame_as_condition,
-                            inst_norm=use_inst_norm,
-                            normal_maps_as_cond=normal_maps_as_cond,
-                            core_tensor_res=core_tensor_res,
-                            use_styled_conv_stylegan2=True,
-                            n_mlp=8).cuda()
+generator = StyledGenerator(embedding_vocab_size=69158,
+                            rendered_flame_ascondition=True,
+                            normal_maps_as_cond=True,
+                            core_tensor_res=4,
+                            n_mlp=8,
+                            apply_sqrt2_fac_in_eq_lin=True).cuda()
 
 # embeddings = generator.get_embddings()
 generator = torch.nn.DataParallel(generator)

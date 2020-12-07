@@ -47,6 +47,7 @@ def update_config(parser):
         args.max_size = 256
         args.nmlp_for_z_to_w = 8
         args.adaptive_interp_loss = False
+        args.chk_pt_dir = os.path.join(cnst.output_root, 'current_runs')
 
         args.normal_maps_as_cond = True
         args.add_low_res_shortcut = False
@@ -87,6 +88,7 @@ def update_config(parser):
         args.max_size = 256
         args.nmlp_for_z_to_w = 8
         args.adaptive_interp_loss = False
+        args.chk_pt_dir = os.path.join(cnst.output_root, 'current_runs')
 
         args.normal_maps_as_cond = True
         args.add_low_res_shortcut = False
@@ -126,6 +128,7 @@ def update_config(parser):
         args.init_size = 256
         args.max_size = 256
         args.nmlp_for_z_to_w = 8
+        args.chk_pt_dir = os.path.join(cnst.output_root, 'current_runs')
 
         args.normal_maps_as_cond = False
         args.add_low_res_shortcut = False
@@ -165,10 +168,11 @@ def update_config(parser):
         args.init_size = 256
         args.max_size = 256
         args.nmlp_for_z_to_w = 8
+        args.chk_pt_dir = os.path.join(cnst.output_root, 'current_runs')
 
-        args.normal_maps_as_cond = False
+        args.normal_maps_as_cond = True
         args.add_low_res_shortcut = False
-        args.rendered_flame_as_condition = False
+        args.rendered_flame_as_condition = True
         args.apply_texture_space_interpolation_loss = False
 
         params_dir = cnst.all_flame_params_file
@@ -205,6 +209,7 @@ def update_config(parser):
         args.max_size = 256
         args.nmlp_for_z_to_w = 8
         args.adaptive_interp_loss = False
+        args.chk_pt_dir = os.path.join(cnst.output_root, 'current_runs')
 
         args.normal_maps_as_cond = True
         args.add_low_res_shortcut = False

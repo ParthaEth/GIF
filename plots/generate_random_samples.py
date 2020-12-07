@@ -81,13 +81,13 @@ run_ids_1 = [29, ]  # with sqrt(2)
 settings_for_runs = \
     {24: {'name': 'vector_cond', 'model_idx': '216000_1', 'normal_maps_as_cond': False,
           'rendered_flame_as_condition': False, 'apply_sqrt2_fac_in_eq_lin': False},
-     29: {'name': 'full_model', 'model_idx': '026000_1', 'normal_maps_as_cond': True,
+     29: {'name': 'full_model', 'model_idx': '294000_1', 'normal_maps_as_cond': True,
           'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': True},
-     7: {'name': 'flm_rndr_tex_interp', 'model_idx': '488000_1', 'normal_maps_as_cond': False,
+     7: {'name': 'flm_rndr_tex_interp', 'model_idx': '051000_1', 'normal_maps_as_cond': False,
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},
-     3: {'name': 'norm_mp_tex_interp', 'model_idx': '040000_1', 'normal_maps_as_cond': True,
+     3: {'name': 'norm_mp_tex_interp', 'model_idx': '203000_1', 'normal_maps_as_cond': True,
          'rendered_flame_as_condition': False, 'apply_sqrt2_fac_in_eq_lin': False},
-     8: {'name': 'norm_map_rend_flm_no_tex_interp', 'model_idx': '460000_1', 'normal_maps_as_cond': True,
+     8: {'name': 'norm_map_rend_flm_no_tex_interp', 'model_idx': '009000_1', 'normal_maps_as_cond': True,
          'rendered_flame_as_condition': True, 'apply_sqrt2_fac_in_eq_lin': False},}
 
 

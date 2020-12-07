@@ -39,16 +39,12 @@ voca_flame_seq_file = f'{input_root_dir}sentence36.npz'
 
 ffhq_images_root_dir = '/raid/data/pghosh/face_gan_data/FFHQ/images1024x1024/'
 
-
-
 # all_flame_params_file = f'{deca_inferred_root}/deca_flame_params_camera_corrected.npy'
 all_flame_params_file = f'{deca_inferred_root}/flame_params_public_texture_model.npy'
 
-
-
 true_iamge_lmdb_path = f'{input_root_dir}/FFHQ/multiscale.lmdb'
 rendered_flame_root = f'{deca_inferred_root}/deca_rendered_with_public_texture.lmdb'
-true_img_stats_dir = f'{deca_inferred_root}/FFHQ/ffhq_fid_stats/'
+true_img_stats_dir = f'{input_root_dir}/FFHQ/ffhq_fid_stats/'
 face_region_mask_file = f'{flame_resource_path}texture_map_256X256_face_only_mask.png'
 flm_3_sigmaparams_dir = f'{input_root_dir}/GIF_teaser/data/'
 list_deca_failed_iamges = f'{deca_inferred_root}/b_box_stats.npz'
@@ -69,11 +65,7 @@ flame_config = {
         'flame_model_path': f'{flame_resource_path}generic_model.pkl',  # acquire it from FLAME project page
         'flame_lmk_embedding_path': f'{flame_resource_path}landmark_embedding.npy',
         'mesh_file': f'{flame_resource_path}head_template_mesh.obj',
-
         'tex_space_path': f'{flame_resource_path}FLAME_texture.npz',  # acquire it from FLAME project page
-        # 'tex_space_path': f'{flame_resource_path}FLAME_basel_texture.npz',  # acquire it from FLAME project page
-
-
         'camera_params': 3,
         'shape_params': 100,
         'expression_params': 50,

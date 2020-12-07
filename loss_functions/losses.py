@@ -105,7 +105,7 @@ class PathLengthRegularizor:
         self.pl_decay = 0.01
 
     def path_length_reg(self, generator, step, alpha, input_indices):
-        style = torch.randn((input_indices.shape[0], 159), device=input_indices.device)#generator.flame_dim))
+        style = torch.randn((input_indices.shape[0], 159), device=input_indices.device)
         style.requires_grad = True
         fake_images = generator(input=style, noise=None, step=step, alpha=alpha, input_indices=input_indices)[0]
 

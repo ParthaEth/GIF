@@ -9,36 +9,8 @@ import constants
 import torch
 from my_utils.eye_centering import position_to_given_location
 import os
-from my_utils.DECA.decalib import util
-
-
-def get_config(datapath):
-    config = {
-            # FLAME
-            'topology_path': os.path.join(datapath, 'head_template.obj'),
-            'flame_model_path': os.path.join(datapath, 'generic_model.pkl'),
-            'flame_lmk_embedding_path': os.path.join(datapath, 'landmark_embedding.npy'),
-            'face_mask_path': os.path.join(datapath, 'face_mask.png'),
-            'camera_params': 3,
-            'shape_params': 100,
-            'detail_params': 100,
-            'expression_params': 50,
-            'pose_params': 6,
-            'tex_params': 50,
-            'light_params': 27,
-            'use_face_contour': True,
-            # test
-            'image_size': 512,
-            'uv_size': 512,
-            'resume_training': True,
-            'pretrained_modelpath': os.path.join(datapath, 'DECA_model.tar'),
-            'tex_basis_path': os.path.join(datapath, 'texture_basis_images_completed.npy'),
-            'tex_mean_path': os.path.join(datapath,  'texture_mean_image_completed.npy'),
-            'useTex': True # Due to the license problem, we are not able to distrubute the texture model
-        }
-    config = util.dict2obj(config)
-
-    return config
+from my_utils.photometric_optimization.models import FLAME
+from my_utils.photometric_optimization import util
 
 ###################################### Voca training Seq ######################################################
 ignore_global_rotation = False
@@ -60,7 +32,8 @@ flm_batch = torch.from_numpy(flm_batch).cuda()
 
 overlay_visualizer = OverLayViz()
 
-flame_decoder = overlay_visualizer.deca.flame.eval()
+config_obj = util.dict2obj(cnst.flame_config)
+flame_decoder = FLAME.FLAME(config_obj).cuda().eval()
 flm_batch = position_to_given_location(flame_decoder, flm_batch)
 
 

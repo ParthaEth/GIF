@@ -222,11 +222,7 @@ class StyledGenerator(nn.Module):
             self.normal_maps_as_cond = normal_maps_as_cond
             self.w_truncation_factor = w_truncation_factor
             self.mean_w = None
-            if rendered_flame_ascondition or normal_maps_as_cond:
-                flame_dim = 0
-                self.flame_dim = flame_dim
             code_dim = 512
-            assert code_dim > self.flame_dim
 
             self.generator = graph_writer.CallWrapper(Generator(
                 code_dim, core_tensor_res=core_tensor_res, noise_in_dims=noise_in_dims,
@@ -234,8 +230,8 @@ class StyledGenerator(nn.Module):
 
             if embedding_vocab_size > 1:
                 self.embedding_vocab_size = embedding_vocab_size
-                self.image_embedding = ImgEmbedding(vector_size=code_dim-self.flame_dim,
-                                                           vocab_size=self.embedding_vocab_size)
+                self.image_embedding = ImgEmbedding(vector_size=code_dim,
+                                                    vocab_size=self.embedding_vocab_size)
                 self.img_embdng = graph_writer.CallWrapper(self.image_embedding)
 
             style_lin_layers = get_w_frm_z(n_mlp, style_dim=code_dim, lr_mlp=0.01, scale_weight=1.0)

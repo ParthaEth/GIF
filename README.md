@@ -2,8 +2,15 @@
 This is the official inmplentation fo the paper GIF: Generative Interpretable Faces - https://arxiv.org/abs/2009.00149.
 GIF is a photorealistic generative face model with explicit 3D geometric and photometric control.
 * __Key words:__ _Generative Interpretable Faces, conditional generative models, 3D conditioning of GANs, explicit 3D control of photorealistic faces, Photorealistic faces._
-### Project page
-https://gif.is.tue.mpg.de/
+
+### Important links
+* Project page https://gif.is.tue.mpg.de/
+* Paper pdf https://arxiv.org/abs/2009.00149
+* video demo https://www.youtube.com/watch?v=-ezPAHyNH9s
+
+## Watch a brief presentation
+[![Watch a presentation](presentation/presentation_vid.png)](https://youtu.be/-ezPAHyNH9s)
+
 
 ### Citation
 If you find our work useful in your project please cite us as 
@@ -30,7 +37,8 @@ Before Running any program you will need to download a few resource files and cr
  1. The main resource directory should be named `GIF_resources` and it should have `input_files` and `output_fiels` as sub-directories
  3. Now you need to provide the path to this directory in the `constants.py` script and make changes if necessary if you wish to change names of the subdirectories
  4. Edit the line `resources_root = '/path/to/the/unzipped/location/of/GIF_resources'`
- 6. Since we are not allowed to redistribute FLAME we ask you to download it form here - https://flame.is.tue.mpg.de/
+ 5. Modify any other paths as you need
+ 6. Download the FLAME 2020 model and the FLAME texture space from here - https://flame.is.tue.mpg.de/ (you need to sign up and agree to the license for access)
  7. Please make sure to dowload 2020 version. After signing in you sould be able to download `FLAME 2020`
  8. Please place the `generic_model.pkl` file in `GIF_resources/input_files/flame_resource`
  9. In this directory you will need to place the `generic_model.pkl`, `head_template_mesh.obj`, and `FLAME_texture.npz` in addition to the already provided files in the zip you just downloaded from the link given above. You can find these files from the official flame website. Link given in point 8.

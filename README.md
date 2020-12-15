@@ -99,5 +99,5 @@ __Disclaimer: This section can be outdated and/or have changed since the time of
 * Code to run vector conditioning to arrvie soon on a different branch:-)
 
 ## Acknowledgements
-We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. 
-The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).
+We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. We specially thank Taylor McConnell for voicing over our video.
+The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS) and by Amazon Web Services.

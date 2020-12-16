@@ -73,7 +73,7 @@ Note that the training code will take all available GPUs in the system and perfo
 5. `python generate_random_samples.py`
 6. Remember to uncomment the appropriate run_id
 
-#### To generate figure 3
+#### To generate Figure 3
 1. `cd plots`
 2. `python role_of_different_parameters.py`
 it will generate `batch_size` number of directories in `f'{cnst.output_root}sample/'` named `gen_iamges<batch_idx>`. Each of these directory contain a column of images as shown in figure 3 in the paper.
@@ -95,8 +95,8 @@ __Disclaimer: This section can be outdated and/or have changed since the time of
 10. Finally follow an AMT tutorial to deploye and obtain the results
 11. You may use the `plot_results.py` or `plot_histogram_results.py` script to visualize AMT results
 
-#### Running the neive vector conditioning model
-* Code to run vector conditioning to arrvie soon on a different branch:-)
+#### Running the naive vector conditioning model
+* Code to run vector conditioning to arrvie soon on a different branch :-)
 
 ## Acknowledgements
 We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. We specially thank Taylor McConnell for voicing over our video.

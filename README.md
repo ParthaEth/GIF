@@ -63,7 +63,7 @@ Note here that you point to the .model file not the npz one.
 To start training from scratch run 
 `python train.py --run_id <runid>`
 
-Note that the training code will take all available GPUs in the system and perform data parallelization. you can set visible GPUs by etting the `CUDA_VISIBLE_DEVICES` environment variable. Run `CUDA_VISIBLE_DEVICES=0,1 python train.py --run_id <runid>` to run on GPU 0 and 1 
+Note that the training code will take all available GPUs in the system and perform data parallelization. You can set visible GPUs by etting the `CUDA_VISIBLE_DEVICES` environment variable. Run `CUDA_VISIBLE_DEVICES=0,1 python train.py --run_id <runid>` to run on GPU 0 and 1 
 
 #### To run random face generation follow the following steps
 1. Clone this repo

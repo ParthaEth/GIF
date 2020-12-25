@@ -1,6 +1,6 @@
 # GIF: Generative Interpretable Faces
-This is the official inmplentation fo the paper GIF: Generative Interpretable Faces - https://arxiv.org/abs/2009.00149.
-GIF is a photorealistic generative face model with explicit 3D geometric and photometric control.
+This is the official inmplentation fo the paper [GIF: Generative Interpretable Faces](https://arxiv.org/abs/2009.00149).
+GIF is a photorealistic generative face model with explicit 3D geometric (i.e. [FLAME](https://flame.is.tue.mpg.de/) parameters) and photometric control.
 * __Key words:__ _Generative Interpretable Faces, conditional generative models, 3D conditioning of GANs, explicit 3D control of photorealistic faces, Photorealistic faces._
 
 ### Important links
@@ -31,17 +31,17 @@ If you find our work useful in your project please cite us as
 ## First thing first
 Before Running any program you will need to download a few resource files and create a suitable placeholder for the training artifacts to be stored
  1. you can use this link to download input files necessary to train GIF from scratch - http://files.is.tuebingen.mpg.de/gif/input_files.zip
- 1. you can use this link to download checkpoints and samples generated from pre-trained GIF models and its ablated versions - http://files.is.tuebingen.mpg.de/gif/output_files.zip
- 1. Now create a directory called `GIF_resources` and unzip the ipput zip or checpoint zip or both in this directory
- 1. When you train or fine tune a model the output directory checkpoint and sample directory will be populated. Rmember that the model atifacts can easily become a few 10s of terabytes
- 1. The main resource directory should be named `GIF_resources` and it should have `input_files` and `output_fiels` as sub-directories
- 3. Now you need to provide the path to this directory in the `constants.py` script and make changes if necessary if you wish to change names of the subdirectories
- 4. Edit the line `resources_root = '/path/to/the/unzipped/location/of/GIF_resources'`
- 5. Modify any other paths as you need
- 6. Download the FLAME 2020 model and the FLAME texture space from here - https://flame.is.tue.mpg.de/ (you need to sign up and agree to the license for access)
- 7. Please make sure to dowload 2020 version. After signing in you sould be able to download `FLAME 2020`
- 8. Please place the `generic_model.pkl` file in `GIF_resources/input_files/flame_resource`
- 9. In this directory you will need to place the `generic_model.pkl`, `head_template_mesh.obj`, and `FLAME_texture.npz` in addition to the already provided files in the zip you just downloaded from the link given above. You can find these files from the official flame website. Link given in point 8.
+ 2. you can use this link to download checkpoints and samples generated from pre-trained GIF models and its ablated versions - http://files.is.tuebingen.mpg.de/gif/output_files.zip
+ 3. Now create a directory called `GIF_resources` and unzip the ipput zip or checpoint zip or both in this directory
+ 4. When you train or fine tune a model the output directory checkpoint and sample directory will be populated. Rmember that the model atifacts can easily become a few 10s of terabytes
+ 5. The main resource directory should be named `GIF_resources` and it should have `input_files` and `output_fiels` as sub-directories
+ 6. Now you need to provide the path to this directory in the `constants.py` script and make changes if necessary if you wish to change names of the subdirectories
+ 7. Edit the line `resources_root = '/path/to/the/unzipped/location/of/GIF_resources'`
+ 8. Modify any other paths as you need
+ 9. Download the FLAME 2020 model and the FLAME texture space from here - https://flame.is.tue.mpg.de/ (you need to sign up and agree to the license for access)
+ 10. Please make sure to dowload 2020 version. After signing in you sould be able to download `FLAME 2020`
+ 11. Please place the `generic_model.pkl` file in `GIF_resources/input_files/flame_resource`
+ 12. In this directory you will need to place the `generic_model.pkl`, `head_template_mesh.obj`, and `FLAME_texture.npz` in addition to the already provided files in the zip you just downloaded from the link given above. You can find these files from the official flame website. Link given in point 9.
 
 #### Preparing training data
 To train GIF you will need to prepare two lmdb datasets
@@ -63,7 +63,7 @@ Note here that you point to the .model file not the npz one.
 To start training from scratch run 
 `python train.py --run_id <runid>`
 
-Note that the training code will take all available GPUs in the system and perform data parallelization. you can set visible GPUs by etting the `CUDA_VISIBLE_DEVICES` environment variable. Run `CUDA_VISIBLE_DEVICES=0,1 python train.py --run_id <runid>` to run on GPU 0 and 1 
+Note that the training code will take all available GPUs in the system and perform data parallelization. You can set visible GPUs by etting the `CUDA_VISIBLE_DEVICES` environment variable. Run `CUDA_VISIBLE_DEVICES=0,1 python train.py --run_id <runid>` to run on GPU 0 and 1 
 
 #### To run random face generation follow the following steps
 1. Clone this repo
@@ -73,7 +73,7 @@ Note that the training code will take all available GPUs in the system and perfo
 5. `python generate_random_samples.py`
 6. Remember to uncomment the appropriate run_id
 
-#### To generate figure 3
+#### To generate Figure 3
 1. `cd plots`
 2. `python role_of_different_parameters.py`
 it will generate `batch_size` number of directories in `f'{cnst.output_root}sample/'` named `gen_iamges<batch_idx>`. Each of these directory contain a column of images as shown in figure 3 in the paper.
@@ -95,9 +95,9 @@ __Disclaimer: This section can be outdated and/or have changed since the time of
 10. Finally follow an AMT tutorial to deploye and obtain the results
 11. You may use the `plot_results.py` or `plot_histogram_results.py` script to visualize AMT results
 
-#### Running the neive vector conditioning model
-* Code to run vector conditioning to arrvie soon on a different branch:-)
+#### Running the naive vector conditioning model
+* Code to run vector conditioning to arrvie soon on a different branch :-)
 
 ## Acknowledgements
-We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. 
-The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS).
+GIF uses [DECA](https://github.com/YadiraF/DECA) to get FLAME geometry, appearance, and lighting parameters for the FFHQ training data. We thank H. Feng for prepraring the training data, Y. Feng and S. Sanyal for support with the rendering and projection pipeline, and C. Köhler, A. Chandrasekaran, M. Keller, M. Landry, C. Huang, A. Osman and D. Tzionas for fruitful discussions, advice and proofreading. We specially thank Taylor McConnell for voicing over our video.
+The work was partially supported by the International Max Planck Research School for Intelligent Systems (IMPRS-IS) and by Amazon Web Services.

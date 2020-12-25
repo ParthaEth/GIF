@@ -1,0 +1,2 @@
+head_template_mesh.obj filter=lfs diff=lfs merge=lfs -text
+b_box_stats.npz filter=lfs diff=lfs merge=lfs -text

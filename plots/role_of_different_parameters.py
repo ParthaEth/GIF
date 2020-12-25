@@ -14,6 +14,8 @@ from dataset_loaders import fast_image_reshape
 import torch
 from my_utils import generic_utils
 from my_utils.eye_centering import position_to_given_location
+from my_utils.photometric_optimization.models import FLAME
+from my_utils.photometric_optimization import util
 
 
 def interchange_params_and_make_batch(flm_1, flm_2):
@@ -105,7 +107,8 @@ batch_size = 200
 match_offset = 2000
 assert num_smpl_to_eval_on > match_offset + batch_size
 
-flame_decoder = overlay_visualizer.deca.flame.eval()
+config_obj = util.dict2obj(cnst.flame_config)
+flame_decoder = FLAME.FLAME(config_obj).cuda().eval()
 
 for run_idx in run_ids_1:
     # import ipdb; ipdb.set_trace()

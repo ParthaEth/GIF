@@ -40,6 +40,7 @@ Before Running any program you will need to download a few resource files and cr
  8. Modify any other paths as you need
  9. Download the FLAME 2020 model and the FLAME texture space from here - https://flame.is.tue.mpg.de/ (you need to sign up and agree to the license for access)
  10. Please make sure to dowload 2020 version. After signing in you sould be able to download `FLAME 2020`
+ 11. Download the [FLAME_texture_data](http://files.is.tue.mpg.de/tbolkart/FLAME/FLAME_texture_data.zip), Unzip it and place the `texture_data_256.npy` file in the flame resources directory. 
  11. Please place the `generic_model.pkl` file in `GIF_resources/input_files/flame_resource`
  12. In this directory you will need to place the `generic_model.pkl`, `head_template_mesh.obj`, and `FLAME_texture.npz` in addition to the already provided files in the zip you just downloaded from the link given above. You can find these files from the official flame website. Link given in point 9.
 

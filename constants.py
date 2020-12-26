@@ -30,7 +30,7 @@ input_root_dir = f'{resources_root}/input_files'
 deca_inferred_root = f'{input_root_dir}/DECA_inferred'
 deca_data_path = f'{deca_inferred_root}/data/'
 flame_resource_path = f'{input_root_dir}/flame_resource/'
-flame_texture_space_dat_file = f'{flame_resource_path}texture_data_FLAME_256.npy'
+flame_texture_space_dat_file = f'{flame_resource_path}texture_data_256.npy'
 
 # Geenral parameter and image and artifact generation paths
 output_root = f'{resources_root}/output_files/'

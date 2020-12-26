@@ -1,7 +1,7 @@
 # This code is a copy from 'https://github.com/rosinality/style-based-gan-pytorch/blob/master/prepare_data.py'
 # hence the licence as given in 'https://github.com/rosinality/style-based-gan-pytorch/blob/master/LICENSE' applies
 import sys
-sys.apth.append('../')
+sys.path.append('../')
 import constants as cnst
 import argparse
 from io import BytesIO

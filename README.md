@@ -1,6 +1,6 @@
 # GIF: Generative Interpretable Faces
-This is the official inmplentation fo the paper [GIF: Generative Interpretable Faces](https://arxiv.org/abs/2009.00149).
-GIF is a photorealistic generative face model with explicit 3D geometric (i.e. [FLAME](https://flame.is.tue.mpg.de/) parameters) and photometric control.
+This is the official implementation for the paper [GIF: Generative Interpretable Faces](https://arxiv.org/abs/2009.00149).
+GIF is a photorealistic generative face model with explicit control over 3D geometry (parametrized like [FLAME|(https://flame.is.tue.mpg.de/)), appearance, and lighting.
 * __Key words:__ _Generative Interpretable Faces, conditional generative models, 3D conditioning of GANs, explicit 3D control of photorealistic faces, Photorealistic faces._
 
 ### Important links

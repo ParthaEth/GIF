@@ -32,7 +32,7 @@ If you find our work useful in your project please cite us as
 Before Running any program you will need to download a few resource files and create a suitable placeholder for the training artifacts to be stored
  1. you can use this link to download input files necessary to train GIF from scratch - http://files.is.tuebingen.mpg.de/gif/input_files.zip
  2. you can use this link to download checkpoints and samples generated from pre-trained GIF models and its ablated versions - http://files.is.tuebingen.mpg.de/gif/output_files.zip
- 3. Now create a directory called `GIF_resources` and unzip the ipput zip or checpoint zip or both in this directory
+ 3. Now create a directory called `GIF_resources` and unzip the input zip or checpoint zip or both in this directory
  4. When you train or fine tune a model the output directory checkpoint and sample directory will be populated. Rmember that the model atifacts can easily become a few 10s of terabytes
  5. The main resource directory should be named `GIF_resources` and it should have `input_files` and `output_fiels` as sub-directories
  6. Now you need to provide the path to this directory in the `constants.py` script and make changes if necessary if you wish to change names of the subdirectories
